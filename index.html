@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Pribadi Saya</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            width: 90%;
+            max-width: 700px;
+            transition: all 0.3s ease;
+        }
+
+        .login-form {
+            text-align: center;
+        }
+
+        .login-form h1 {
+            color: #4a5568;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            font-weight: 300;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .dashboard {
+            display: none;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .header h1 {
+            color: #4a5568;
+            font-size: 1.8rem;
+            font-weight: 300;
+        }
+
+        .logout-btn {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #c53030;
+            transform: translateY(-1px);
+        }
+
+        .data-section {
+            margin-bottom: 2rem;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .section-title {
+            color: #4a5568;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .data-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .data-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .data-label {
+            font-weight: 600;
+            color: #4a5568;
+            flex: 1;
+        }
+
+        .data-value {
+            color: #667eea;
+            font-weight: 500;
+            flex: 2;
+        }
+
+        .data-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex: 1;
+            justify-content: flex-end;
+        }
+
+        .data-value a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .data-value a:hover {
+            text-decoration: underline;
+        }
+
+        .add-data-form {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-row input, .form-row select {
+            flex: 1;
+            padding: 0.8rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .add-btn {
+            background: #48bb78;
+            padding: 0.8rem 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .add-btn:hover {
+            background: #38a169;
+        }
+
+        .delete-btn, .edit-btn {
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn {
+            background: #e53e3e;
+        }
+
+        .delete-btn:hover {
+            background: #c53030;
+            transform: scale(1.05);
+        }
+
+        .edit-btn {
+            background: #3182ce;
+        }
+
+        .edit-btn:hover {
+            background: #2c5282;
+            transform: scale(1.05);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 10% auto;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s ease;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close:hover {
+            color: #e53e3e;
+            transform: scale(1.1);
+        }
+
+        .form-group-modal {
+            margin-bottom: 1rem;
+        }
+
+        .form-group-modal label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .form-group-modal input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .save-btn {
+            background: #48bb78;
+            flex: 1;
+        }
+
+        .cancel-btn {
+            background: #e53e3e;
+            flex: 1;
+        }
+
+        .error {
+            color: #e53e3e;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .success {
+            color: #48bb78;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .storage-info {
+            background: rgba(72, 187, 120, 0.1);
+            border: 1px solid #48bb78;
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
+            color: #2d7748;
+            font-size: 0.9rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+            
+            .form-row {
+                flex-direction: column;
+            }
+
+            .modal-buttons {
+                flex-direction: column;
+            }
+
+            .data-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.5rem;
+            }
+
+            .data-actions {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Login Form -->
+        <div id="loginForm" class="login-form">
+            <h1>🔒 Data Pribadi Heryan</h1>
+            <div class="form-group">
+                <input type="password" id="passwordInput" placeholder="Masukkan kata sandi" />
+            </div>
+            <button class="btn" onclick="login()">Masuk</button>
+            <div id="error" class="error"></div>
+            
+            <div class="storage-info">
+                <strong>ℹ️ Informasi:</strong><br>
+                • Aplikasi untuk menyimpan data pribadi penting<br>
+                • Data disimpan sementara di browser (tidak permanen)<br>
+                • Backup data secara berkala
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard" class="dashboard">
+            <div class="header">
+                <h1>📊 Data Pribadi Heryan</h1>
+                <button class="logout-btn" onclick="logout()">Keluar</button>
+            </div>
+
+            <!-- Emergency Contacts Section -->
+            <div class="data-section">
+                <h2 class="section-title">🚨 Nomor Darurat</h2>
+                <div id="emergencyContacts">
+                    <div class="data-item">
+                        <span class="data-label">Polisi</span>
+                        <span class="data-value"><a href="tel:110">110</a></span>
+                        <div class="data-actions">
+                            <span style="color: #718096; font-size: 0.8rem;">Nasional</span>
+                        </div>
+                    </div>
+                    <div class="data-item">
+                        <span class="data-label">Pemadam Kebakaran</span>
+                        <span class="data-value"><a href="tel:113">113</a></span>
+                        <div class="data-actions">
+                            <span style="color: #718096; font-size: 0.8rem;">Nasional</span>
+                        </div>
+                    </div>
+                    <div class="data-item">
+                        <span class="data-label">Ambulans</span>
+                        <span class="data-value"><a href="tel:118">118</a> / <a href="tel:119">119</a></span>
+                        <div class="data-actions">
+                            <span style="color: #718096; font-size: 0.8rem;">Nasional</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Personal Contacts Section -->
+            <div class="data-section">
+                <h2 class="section-title">👥 Kontak Penting</h2>
+                <div id="personalContacts"></div>
+            </div>
+
+            <!-- Important Links Section -->
+            <div class="data-section">
+                <h2 class="section-title">🔗 Link Penting</h2>
+                <div id="importantLinks"></div>
+            </div>
+
+            <!-- Notes Section -->
+            <div class="data-section">
+                <h2 class="section-title">📝 Catatan Penting</h2>
+                <div id="importantNotes"></div>
+            </div>
+
+            <!-- Add New Data Form -->
+            <div class="add-data-form">
+                <h3 class="section-title">➕ Tambah Data Baru</h3>
+                <div class="form-row">
+                    <select id="dataType">
+                        <option value="contacts">Kontak</option>
+                        <option value="links">Link</option>
+                        <option value="notes">Catatan</option>
+                    </select>
+                    <input type="text" id="dataLabel" placeholder="Label/Nama" />
+                    <input type="text" id="dataValue" placeholder="Nomor/URL/Catatan" />
+                </div>
+                <button class="btn add-btn" onclick="addData()">Tambah Data</button>
+                <div id="addMessage"></div>
+            </div>
+        </div>
+
+        <!-- Edit Modal -->
+        <div id="editModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>✏️ Edit Data</h3>
+                    <span class="close" onclick="closeEditModal()">&times;</span>
+                </div>
+                <div class="form-group-modal">
+                    <label for="editLabel">Label/Nama:</label>
+                    <input type="text" id="editLabel">
+                </div>
+                <div class="form-group-modal">
+                    <label for="editValue">Nilai:</label>
+                    <input type="text" id="editValue">
+                </div>
+                <div class="modal-buttons">
+                    <button class="btn save-btn" onclick="saveEdit()">Simpan</button>
+                    <button class="btn cancel-btn" onclick="closeEditModal()">Batal</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <script>
+        // ⚠️ PENTING: GANTI PASSWORD INI SEBELUM MENGGUNAKAN!
+        // Cari baris ini dan ganti "mydata2024" dengan password Anda sendiri
+        const CORRECT_PASSWORD = "Angkasa09*";  // <-- GANTI INI!
+        
+        // Data storage in memory
+        let personalData = {
+            contacts: [
+                {label: "Keluarga - Ibu", value: "08123456789"},
+                {label: "Keluarga - Ayah", value: "08123456790"},
+                {label: "Dokter Keluarga", value: "08123456791"}
+            ],
+            links: [
+                {label: "Email Utama", value: "https://mail.google.com"},
+                {label: "Internet Banking", value: "https://ib.bni.co.id"},
+                {label: "BPJS Kesehatan", value: "https://mobile-jkn.bpjs-kesehatan.go.id"}
+            ],
+            notes: [
+                {label: "NIK", value: "1234567890123456"},
+                {label: "No. BPJS", value: "0001234567890"},
+                {label: "Golongan Darah", value: "O+"}
+            ]
+        };
+
+        // Edit modal variables
+        let currentEditType = '';
+        let currentEditIndex = -1;
+
+        // Login functions
+        function login() {
+            const password = document.getElementById('passwordInput').value;
+            const errorDiv = document.getElementById('error');
+            
+            if (password === CORRECT_PASSWORD) {
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                loadData();
+                errorDiv.textContent = '';
+            } else {
+                errorDiv.textContent = 'Kata sandi salah! Coba lagi.';
+                document.getElementById('passwordInput').value = '';
+            }
+        }
+
+        function logout() {
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('passwordInput').value = '';
+        }
+
+        // Data loading functions
+        function loadData() {
+            loadContacts();
+            loadLinks();
+            loadNotes();
+        }
+
+        function loadContacts() {
+            const container = document.getElementById('personalContacts');
+            container.innerHTML = '';
+            
+            personalData.contacts.forEach((contact, index) => {
+                const div = document.createElement('div');
+                div.className = 'data-item';
+                div.innerHTML = `
+                    <span class="data-label">${contact.label}</span>
+                    <span class="data-value"><a href="tel:${contact.value}">${contact.value}</a></span>
+                    <div class="data-actions">
+                        <button class="edit-btn" onclick="editData('contacts', ${index}, '${contact.label.replace(/'/g, "\\'")}', '${contact.value}')">Edit</button>
+                        <button class="delete-btn" onclick="deleteData('contacts', ${index})">Hapus</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function loadLinks() {
+            const container = document.getElementById('importantLinks');
+            container.innerHTML = '';
+            
+            personalData.links.forEach((link, index) => {
+                const div = document.createElement('div');
+                div.className = 'data-item';
+                div.innerHTML = `
+                    <span class="data-label">${link.label}</span>
+                    <span class="data-value"><a href="${link.value}" target="_blank">${link.value.replace(/^https?:\/\//, '')}</a></span>
+                    <div class="data-actions">
+                        <button class="edit-btn" onclick="editData('links', ${index}, '${link.label.replace(/'/g, "\\'")}', '${link.value}')">Edit</button>
+                        <button class="delete-btn" onclick="deleteData('links', ${index})">Hapus</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function loadNotes() {
+            const container = document.getElementById('importantNotes');
+            container.innerHTML = '';
+            
+            personalData.notes.forEach((note, index) => {
+                const div = document.createElement('div');
+                div.className = 'data-item';
+                div.innerHTML = `
+                    <span class="data-label">${note.label}</span>
+                    <span class="data-value">${note.value}</span>
+                    <div class="data-actions">
+                        <button class="edit-btn" onclick="editData('notes', ${index}, '${note.label.replace(/'/g, "\\'")}', '${note.value.replace(/'/g, "\\'")}')">Edit</button>
+                        <button class="delete-btn" onclick="deleteData('notes', ${index})">Hapus</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Data management functions
+        function addData() {
+            const type = document.getElementById('dataType').value;
+            const label = document.getElementById('dataLabel').value.trim();
+            const value = document.getElementById('dataValue').value.trim();
+            const messageDiv = document.getElementById('addMessage');
+            
+            if (!label || !value) {
+                messageDiv.innerHTML = '<div class="error">Mohon isi semua field!</div>';
+                setTimeout(() => messageDiv.innerHTML = '', 3000);
+                return;
+            }
+            
+            const newItem = {label: label, value: value};
+            personalData[type].push(newItem);
+            
+            // Clear form
+            document.getElementById('dataLabel').value = '';
+            document.getElementById('dataValue').value = '';
+            
+            // Show success message
+            messageDiv.innerHTML = '<div class="success">Data berhasil ditambahkan!</div>';
+            setTimeout(() => messageDiv.innerHTML = '', 3000);
+            
+            // Reload data
+            loadData();
+        }
+
+        function deleteData(type, index) {
+            if (confirm('Yakin ingin menghapus data ini?')) {
+                personalData[type].splice(index, 1);
+                loadData();
+            }
+        }
+
+        // Edit functions
+        function editData(type, index, currentLabel, currentValue) {
+            currentEditType = type;
+            currentEditIndex = index;
+            
+            document.getElementById('editLabel').value = currentLabel;
+            document.getElementById('editValue').value = currentValue;
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+            currentEditType = '';
+            currentEditIndex = -1;
+        }
+
+        function saveEdit() {
+            const newLabel = document.getElementById('editLabel').value.trim();
+            const newValue = document.getElementById('editValue').value.trim();
+            
+            if (!newLabel || !newValue) {
+                alert('Mohon isi semua field!');
+                return;
+            }
+            
+            personalData[currentEditType][currentEditIndex] = {
+                label: newLabel,
+                value: newValue
+            };
+            
+            loadData();
+            closeEditModal();
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    login();
+                }
+            });
+
+            // Close modal when clicking outside
+            window.onclick = function(event) {
+                const modal = document.getElementById('editModal');
+                if (event.target == modal) {
+                    closeEditModal();
+                }
+            };
+        });
+    </script>
+</body>
+</html>
